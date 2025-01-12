@@ -16,7 +16,7 @@ type branchInfo struct {
 }
 
 func getBranches() ([]branchInfo, error) {
-	cmd := exec.Command("git", "for-each-ref", "--sort=-committerdate", "refs/heads/", "--format=%(refname:short)%09%(committerdate:iso8601)")
+	cmd := exec.Command("git", "for-each-ref", "--sort=-committerdate", "refs/heads/", "--format=%(refname:short) %(committerdate:iso8601)")
 	output, err := cmd.Output()
 	if err != nil {
 		return nil, err
@@ -26,12 +26,13 @@ func getBranches() ([]branchInfo, error) {
 	branches := make([]branchInfo, 0, len(lines))
 
 	for _, line := range lines {
-		parts := strings.Split(line, "\t")
+		parts := strings.SplitN(line, " ", 2)
 		if len(parts) != 2 {
+			fmt.Printf("Skipping malformed line: %q\n", line)
 			continue
 		}
 		
-		commitTime, err := time.Parse(time.RFC3339, parts[1])
+		commitTime, err := time.Parse("2006-01-02 15:04:05 -0700", parts[1])
 		if err != nil {
 			continue
 		}
