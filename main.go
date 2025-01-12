@@ -59,7 +59,7 @@ func main() {
 
 	branchNames := make([]string, len(branchInfos))
 	for i, info := range branchInfos {
-		branchNames[i] = fmt.Sprintf("%s (%s)", info.name, info.lastCommit.Format("2006-01-02 15:04:05"))
+		branchNames[i] = fmt.Sprintf("%s\t\033[2m(%s)\033[0m", info.name, info.lastCommit.Format("2006-01-02 15:04:05"))
 	}
 
 	prompt := promptui.Select{
