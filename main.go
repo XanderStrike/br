@@ -67,10 +67,8 @@ func main() {
 
 	branchNames := make([]string, len(branchInfos))
 	for i, info := range branchInfos {
-		// Calculate needed tabs (assuming tab width of 8)
-		tabsNeeded := ((maxLen + 8) - len(info.name)) / 8
-		tabs := strings.Repeat("\t", tabsNeeded)
-		branchNames[i] = fmt.Sprintf("%s%s\033[2m(%s)\033[0m", info.name, tabs, info.lastCommit.Format("2006-01-02 15:04:05"))
+		padding := strings.Repeat(" ", maxLen-len(info.name)+4) // 4 spaces minimum padding
+		branchNames[i] = fmt.Sprintf("%s%s\033[2m(%s)\033[0m", info.name, padding, info.lastCommit.Format("2006-01-02 15:04:05"))
 	}
 
 	prompt := promptui.Select{
