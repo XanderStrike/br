@@ -10,6 +10,28 @@ import (
 	"github.com/manifoldco/promptui"
 )
 
+func formatRelativeTime(t time.Time) string {
+	now := time.Now()
+	diff := now.Sub(t)
+
+	days := int(diff.Hours() / 24)
+	if days == 0 {
+		hours := int(diff.Hours())
+		if hours == 0 {
+			minutes := int(diff.Minutes())
+			return fmt.Sprintf("%d minutes ago", minutes)
+		}
+		return fmt.Sprintf("%d hours ago", hours)
+	} else if days < 7 {
+		return fmt.Sprintf("%d days ago", days)
+	} else if days < 30 {
+		weeks := days / 7
+		return fmt.Sprintf("%d weeks ago", weeks)
+	}
+	months := days / 30
+	return fmt.Sprintf("%d months ago", months)
+}
+
 type branchInfo struct {
 	name       string
 	lastCommit time.Time
@@ -68,7 +90,7 @@ func main() {
 	branchNames := make([]string, len(branchInfos))
 	for i, info := range branchInfos {
 		padding := strings.Repeat(" ", maxLen-len(info.name)+4) // 4 spaces minimum padding
-		branchNames[i] = fmt.Sprintf("%s%s\033[2m(%s)\033[0m", info.name, padding, info.lastCommit.Format("2006-01-02 15:04:05"))
+		branchNames[i] = fmt.Sprintf("%s%s\033[2m(%s)\033[0m", info.name, padding, formatRelativeTime(info.lastCommit))
 	}
 
 	prompt := promptui.Select{
