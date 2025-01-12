@@ -57,9 +57,20 @@ func main() {
 		return
 	}
 
+	// Find longest branch name for alignment
+	maxLen := 0
+	for _, info := range branchInfos {
+		if len(info.name) > maxLen {
+			maxLen = len(info.name)
+		}
+	}
+
 	branchNames := make([]string, len(branchInfos))
 	for i, info := range branchInfos {
-		branchNames[i] = fmt.Sprintf("%s\t\033[2m(%s)\033[0m", info.name, info.lastCommit.Format("2006-01-02 15:04:05"))
+		// Calculate needed tabs (assuming tab width of 8)
+		tabsNeeded := ((maxLen + 8) - len(info.name)) / 8
+		tabs := strings.Repeat("\t", tabsNeeded)
+		branchNames[i] = fmt.Sprintf("%s%s\033[2m(%s)\033[0m", info.name, tabs, info.lastCommit.Format("2006-01-02 15:04:05"))
 	}
 
 	prompt := promptui.Select{
