@@ -96,6 +96,7 @@ func main() {
 	prompt := promptui.Select{
 		Label: "Select a Git Branch",
 		Items: branchNames,
+		Size:  10,
 	}
 
 	_, result, err := prompt.Run()
