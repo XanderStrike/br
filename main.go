@@ -79,18 +79,9 @@ func main() {
 		return
 	}
 
-	// Find longest branch name for alignment
-	maxLen := 0
-	for _, info := range branchInfos {
-		if len(info.name) > maxLen {
-			maxLen = len(info.name)
-		}
-	}
-
 	branchNames := make([]string, len(branchInfos))
 	for i, info := range branchInfos {
-		padding := strings.Repeat(" ", maxLen-len(info.name)+4) // 4 spaces minimum padding
-		branchNames[i] = fmt.Sprintf("%s%s\033[2m(%s)\033[0m", info.name, padding, formatRelativeTime(info.lastCommit))
+		branchNames[i] = fmt.Sprintf("%s \033[2m(%s)\033[0m", info.name, formatRelativeTime(info.lastCommit))
 	}
 
 	prompt := promptui.Select{
